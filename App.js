@@ -1,102 +1,63 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Button, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
+
+import InputContato from './components/InputContato';
+import ContatoItem from './components/ContatoItem';
 
 export default function App() {
-  const [contatoNome, setContatoNome] = useState('');
-  const [contatoTelefone, setContatoTelefone] = useState('');
-  const [contatos, setContatos] = useState([]);
-  const [contadorContatos, setContadorContatos] = useState(10);
+	const [contatos, setContatos] = useState([]);
+	const [contadorContatos, setContadorContatos] = useState(10);
 
-  const capturarContatoNome = (nome) => {
-    setContatoNome(nome)
-  };
+	const adicionarContato = (contatoNome, contatoTelefone) => {
+		setContatos((contatos) => {
+			contatos = [...contatos, { key: contadorContatos.toString(), value: { contatoNome, contatoTelefone } }];
+			setContadorContatos(contadorContatos + 2);
+			return contatos;
+		});
+	}
 
-  const capturarContatoTelefone = (telefone) => {
-    setContatoTelefone(telefone)
-  };
+	const deletarContato = (key) => {
+		setContatos(contatos => {
+			return contatos.filter(contato => {
+				return contato.key !== key;
+			});
+		});
+	}
 
-  const adicionarContato = () => {
-    setContatos((contatos) => {
-      contatos = [...contatos, { key: contadorContatos.toString(), value: { contatoNome, contatoTelefone } }];
-      setContadorContatos(contadorContatos + 2);
-      return contatos;
-    });
-  }
+	return (
+		<View style={styles.telaPrincipalView}>
 
-  return (
-    <View style={styles.telaPrincipalView}>
+			<InputContato onAdicionarContato={adicionarContato} />
 
-      <View style={styles.lembreteView}>
-        <TextInput
-          placeholder="Nome do Contato"
-          style={styles.lembreteInputText}
-          onChangeText={capturarContatoNome}
-          value={contatoNome}
-        />
+			<View>
+				<Text style={styles.ListaHeader}>Contatos Salvos</Text>
+				<FlatList
+					style={styles.FlatListStyle}
+					data={contatos}
+					renderItem={
+						contato => (
+							<ContatoItem contato={contato} onDelete={deletarContato} />
+						)
+					}
+				/>
+			</View>
 
-        <TextInput
-          placeholder="Telefone"
-          style={styles.lembreteInputText}
-          onChangeText={capturarContatoTelefone}
-          value={contatoTelefone}
-          keyboardType={"phone-pad"}
-        />
-
-        <Button
-          title="Adicionar Contato"
-          onPress={adicionarContato}
-        />
-      </View>
-
-      <View>
-      <Text style={styles.ListaHeader}>Contatos Salvos</Text>
-        <FlatList
-          style={styles.FlatListStyle}
-          data={contatos}
-          renderItem={
-            contato => (
-              <View style={styles.itemNaLista}>
-                <Text>{"Nome: " + contato.item.value.contatoNome + "\nTelefone: " + contato.item.value.contatoTelefone}</Text>
-              </View>
-            )
-          }
-        />
-      </View>
-
-    </View>
-  );
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({
-  telaPrincipalView: {
-    paddingBottom: 50,
-    paddingTop: 50
-  },
-  lembreteView: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: "center"
-  },
-  lembreteInputText: {
-    width: '80%',
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    padding: 2,
-    marginBottom: 8
-  },
-  itemNaLista: {
-    padding: 12,
-    backgroundColor: '#FFF',
-    borderBottomColor: '#000',
-    borderBottomWidth: 1
-  },
-  ListaHeader: {
-    textAlign: 'center',
-    marginTop: 8,
-    fontSize: 30
-  },
-  FlatListStyle: {
-    marginTop: 8,
-    height: '80%'
-  }
+	telaPrincipalView: {
+		paddingBottom: 50,
+		paddingTop: 50
+	},
+	ListaHeader: {
+		textAlign: 'center',
+		marginTop: 8,
+		fontSize: 30
+	},
+	FlatListStyle: {
+		marginTop: 8,
+		height: '80%'
+	}
 });
