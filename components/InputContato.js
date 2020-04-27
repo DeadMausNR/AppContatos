@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { StyleSheet, TextInput, View, Button } from 'react-native';
 
 const InputContato = (props) => {
-    const [contatoNome, setContatoNome] = useState('');
-    const [contatoTelefone, setContatoTelefone] = useState('');
+    const contatoKey = props.contatoAtual ? props.contatoAtual.item.key : '';
+    const [contatoNome, setContatoNome] = useState(props.contatoAtual ? props.contatoAtual.item.value.contatoNome : '');
+    const [contatoTelefone, setContatoTelefone] = useState(props.contatoAtual ? props.contatoAtual.item.value.contatoTelefone : '');
 
     const capturarContatoNome = (nome) => {
         setContatoNome(nome)
@@ -12,6 +13,18 @@ const InputContato = (props) => {
     const capturarContatoTelefone = (telefone) => {
         setContatoTelefone(telefone)
     };
+
+    let botaoAcao;
+    if (props.onAdicionarContato)
+        botaoAcao = <Button
+            title="Adicionar Contato"
+            onPress={() => props.onAdicionarContato(contatoNome, contatoTelefone)}
+        />
+    else if (props.onAtualizarContato)
+        botaoAcao = <Button
+            title="Atualizar Contato"
+            onPress={() => props.onAtualizarContato({ value: { contatoNome, contatoTelefone }, key: contatoKey })}
+        />
 
     return (
         <View>
@@ -31,10 +44,8 @@ const InputContato = (props) => {
                     keyboardType={"phone-pad"}
                 />
 
-                <Button
-                    title="Adicionar Contato"
-                    onPress={() => props.onAdicionarContato(contatoNome, contatoTelefone)}
-                />
+                {botaoAcao}
+
             </View>
         </View>
     );

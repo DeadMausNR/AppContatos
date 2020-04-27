@@ -7,7 +7,7 @@ const ContatoItem = (props) => {
     const { contato } = props;
 
     return (
-        <TouchableOpacity onLongPress={() => props.onDelete(contato.item.key)}>
+        <TouchableOpacity onLongPress={() => props.onDelete(contato.item.key)} onPress={props.onAbrirAtualizar}>
             <Cartao style={styles.contatoInfo}>
                 <Text>{"Nome: " + contato.item.value.contatoNome + "\nTelefone: " + contato.item.value.contatoTelefone}</Text>
             </Cartao>

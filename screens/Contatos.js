@@ -1,29 +1,43 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Alert } from 'react-native';
 
 import InputContato from '../components/InputContato';
 import ContatoItem from '../components/ContatoItem';
 import Cartao from '../components/Cartao';
 import cores from '../cores/cores';
 
-export default function Contato() {
-    const [contatos, setContatos] = useState([]);
-    const [contadorContatos, setContadorContatos] = useState(10);
+export default function Contato(props) {
+    const [contatos, setContatos] = useState(props.listaContatos);
+    const [contadorContatos, setContadorContatos] = useState(props.listaContatos.length);
 
     const adicionarContato = (contatoNome, contatoTelefone) => {
         setContatos((contatos) => {
             contatos = [...contatos, { key: contadorContatos.toString(), value: { contatoNome, contatoTelefone } }];
-            setContadorContatos(contadorContatos + 2);
+            setContadorContatos(contadorContatos + 1);
             return contatos;
         });
     }
 
     const deletarContato = (key) => {
-        setContatos(contatos => {
-            return contatos.filter(contato => {
-                return contato.key !== key;
-            });
-        });
+        Alert.alert(
+            'Deletar Contato',
+            'Deseja mesmo deletar esse contato?',
+            [{
+                text: 'Não',
+                style: 'cancel'
+            },
+            {
+                text: 'Sim',
+                style: 'default',
+                onPress: () => {
+                    setContatos(contatos => {
+                        return contatos.filter(contato => {
+                            return contato.key !== key;
+                        });
+                    });
+                }
+            }]
+        );
     }
 
     return (
@@ -39,7 +53,7 @@ export default function Contato() {
                     data={contatos}
                     renderItem={
                         contato => (
-                            <ContatoItem contato={contato} onDelete={deletarContato} />
+                            <ContatoItem contato={contato} onDelete={deletarContato} onAbrirAtualizar={() => props.onAbrirAtualizar(contatos, contato)} />
                         )
                     }
                 />
