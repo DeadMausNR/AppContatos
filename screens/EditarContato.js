@@ -1,44 +1,24 @@
 import React from 'react';
-import { StyleSheet, View, Alert } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import InputContato from '../components/InputContato';
 import Cartao from '../components/Cartao';
 import cores from '../cores/cores';
 
-export default function EditarContato(props) {
-
-    const atualizarContato = (novoContato) => {
-        Alert.alert(
-            'Atualizar Contato',
-            'Deseja mesmo atualizar esse contato?',
-            [{
-                text: 'Não',
-                style: 'cancel'
-            },
-            {
-                text: 'Sim',
-                style: 'default',
-                onPress: () => {
-                    props.contatos[props.contatos.findIndex(contato => contato.key === novoContato.key.toString())] = novoContato;
-                    props.onAtualizarContato(props.contatos);
-                }
-            }]
-        );
-    }
-
+export default function EditarContato({ route }) {
     return (
-        <View style={styles.telaPrincipalView}>
+        <View style={styles.telaUpdateView}>
             <Cartao style={styles.contatoInput}>
-                <InputContato contatoAtual={props.contatoSelecionado} onAtualizarContato={atualizarContato} />
+                <InputContato contatoAtual={route.params.contato} onAtualizarContato={route.params.atualizarContato} />
             </Cartao>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    telaPrincipalView: {
+    telaUpdateView: {
         paddingBottom: 50,
-        paddingTop: 50,
+        paddingTop: 10,
         alignItems: 'center'
     },
     contatoInput: {

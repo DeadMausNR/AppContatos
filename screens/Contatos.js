@@ -1,21 +1,54 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, Alert } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Alert, Platform } from 'react-native';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
-import InputContato from '../components/InputContato';
+import BotaoCabecalho from '../components/BotaoCabecalho';
 import ContatoItem from '../components/ContatoItem';
 import Cartao from '../components/Cartao';
 import cores from '../cores/cores';
 
-export default function Contato(props) {
-    const [contatos, setContatos] = useState(props.listaContatos);
-    const [contadorContatos, setContadorContatos] = useState(props.listaContatos.length);
+export default function Contato({ navigation, route }) {
+    const [contatos, setContatos] = useState(route.params.listaContatos);
+    const [contadorContatos, setContadorContatos] = useState(route.params.listaContatos.length);
+
+    navigation.setOptions({
+        headerRight: () =>
+            <HeaderButtons HeaderButtonComponent={BotaoCabecalho}>
+                <Item
+                    title="Adicionar"
+                    iconName={Platform.OS === 'android' ? 'md-add' : 'ios-add'}
+                    onPress={() => { navigation.navigate("AddContato", { adicionarContato }) }}
+                />
+            </HeaderButtons>
+    });
 
     const adicionarContato = (contatoNome, contatoTelefone) => {
         setContatos((contatos) => {
-            contatos = [...contatos, { key: contadorContatos.toString(), value: { contatoNome, contatoTelefone } }];
+            contatos = [...contatos, { key: contadorContatos.toString(), value: { contatoNome, contatoTelefone } }]
             setContadorContatos(contadorContatos + 1);
             return contatos;
         });
+
+        navigation.navigate('Contatos', { listaContatos: contatos });
+    }
+
+    const atualizarContato = (novoContato) => {
+        Alert.alert(
+            'Atualizar Contato',
+            'Deseja mesmo atualizar esse contato?',
+            [{
+                text: 'Não',
+                style: 'cancel'
+            },
+            {
+                text: 'Sim',
+                style: 'default',
+                onPress: () => {
+                    contatos[contatos.findIndex(contato => contato.key === novoContato.key.toString())] = novoContato
+                    navigation.navigate('Contatos', { listaContatos: contatos });
+                }
+            }]
+        );
     }
 
     const deletarContato = (key) => {
@@ -42,10 +75,6 @@ export default function Contato(props) {
 
     return (
         <View style={styles.telaPrincipalView}>
-            <Cartao style={styles.contatoInput}>
-                <InputContato onAdicionarContato={adicionarContato} />
-            </Cartao>
-
             <Cartao style={styles.contatos}>
                 <Text style={styles.ListaHeader}>Contatos Salvos</Text>
                 <FlatList
@@ -53,7 +82,7 @@ export default function Contato(props) {
                     data={contatos}
                     renderItem={
                         contato => (
-                            <ContatoItem contato={contato} onDelete={deletarContato} onAbrirAtualizar={() => props.onAbrirAtualizar(contatos, contato)} />
+                            <ContatoItem contato={contato} onDelete={deletarContato} onAbrirAtualizar={() => navigation.navigate('EditarContato', { contato, atualizarContato })} />
                         )
                     }
                 />
@@ -65,7 +94,7 @@ export default function Contato(props) {
 const styles = StyleSheet.create({
     telaPrincipalView: {
         paddingBottom: 50,
-        paddingTop: 50,
+        paddingTop: 10,
         alignItems: 'center'
     },
     ListaHeader: {
@@ -78,9 +107,6 @@ const styles = StyleSheet.create({
     },
     contatos: {
         backgroundColor: cores.backgroundCartaoPrimary,
-        height: '80%'
-    },
-    contatoInput: {
-        backgroundColor: cores.backgroundCartaoPrimary
+        paddingBottom: 50
     }
 });
