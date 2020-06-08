@@ -3,12 +3,15 @@ import { StyleSheet, TextInput, View, Button } from 'react-native';
 
 import TirarFoto from './tirarFoto';
 import Contato from '../model/Contato';
+import CapturaLocalizacao from './CapturaLocalizacao';
 
 const InputContato = (props) => {
     const contatoKey = props.contatoAtual ? props.contatoAtual.key : '';
     const [contatoNome, setContatoNome] = useState(props.contatoAtual ? props.contatoAtual.nome : '');
     const [contatoTelefone, setContatoTelefone] = useState(props.contatoAtual ? props.contatoAtual.telefone : '');
     const [contatoImagem, setContatoImagem] = useState(props.contatoAtual ? props.contatoAtual.imagem : '');
+    const [lat, setLat] = useState(props.contatoAtual ? props.contatoAtual.lat : '');
+    const [lng, setLng] = useState(props.contatoAtual ? props.contatoAtual.lng : '');
 
     const capturarContatoNome = (nome) => {
         setContatoNome(nome)
@@ -41,9 +44,17 @@ const InputContato = (props) => {
 
             <TirarFoto fotoAtual={contatoImagem} onFotoTirada={capturarContatoImagem} />
 
+            <CapturaLocalizacao
+                localizacaoInicial={{ lat, lng }}
+                handleLocalizacao={(lat, lng) => {
+                    setLat(lat);
+                    setLng(lng);
+                }}
+            />
+
             <Button
                 title="Salvar Contato"
-                onPress={() => props.onSalvarContato(new Contato(contatoKey, contatoNome, contatoTelefone, contatoImagem))}
+                onPress={() => props.onSalvarContato(new Contato(contatoKey, contatoNome, contatoTelefone, contatoImagem, lat, lng, new Date().toString()))}
             />
         </View>
     );

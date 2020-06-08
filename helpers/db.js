@@ -6,7 +6,7 @@ export const init = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
             tx.executeSql(
-                'CREATE TABLE IF NOT EXISTS contato (key INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, telefone TEXT, imagem TEXT);',
+                'CREATE TABLE IF NOT EXISTS contato (key INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, telefone TEXT, imagem TEXT, lat TEXT, lng TEXT, createdAt TEXT);',
                 [],
                 () => {
                     resolve()
@@ -43,11 +43,14 @@ export const inserirContato = (contato) => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
             tx.executeSql(
-                'INSERT INTO contato (nome, telefone, imagem) VALUES (?, ?, ?)',
+                'INSERT INTO contato (nome, telefone, imagem, lat, lng, createdAt) VALUES (?, ?, ?, ?, ?, ?)',
                 [
                     contato.nome,
                     contato.telefone,
-                    contato.imagem
+                    contato.imagem,
+                    contato.lat,
+                    contato.lng,
+                    contato.createdAt
                 ],
                 (_, resultado) => {
                     resolve(resultado)
@@ -66,11 +69,14 @@ export const atualizarContato = (contato) => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
             tx.executeSql(
-                'UPDATE contato set nome = ?, telefone = ?, imagem = ? WHERE key = ?',
+                'UPDATE contato set nome = ?, telefone = ?, imagem = ?, lat = ?, lng = ?, createdAt = ? WHERE key = ?',
                 [
                     contato.nome,
                     contato.telefone,
                     contato.imagem,
+                    contato.lat,
+                    contato.lng,
+                    contato.createdAt,
                     contato.key
                 ],
                 (_, resultado) => {

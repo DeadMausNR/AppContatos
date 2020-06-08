@@ -9,7 +9,7 @@ export default (estado = estadoInicial, action) => {
     switch (action.type) {
         case LISTA_CONTATOS:
             return {
-                listaContatos: action.contatos.map(c => new Contato(c.key, c.nome, c.telefone, c.imagem))
+                listaContatos: action.contatos.map(c => new Contato(c.key, c.nome, c.telefone, c.imagem, c.lat, c.lng, c.createdAt))
             }
         case ADD_CONTATO:
             return {
