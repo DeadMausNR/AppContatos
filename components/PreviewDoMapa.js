@@ -7,7 +7,7 @@ export default PreviewDoMapa = (props) => {
     let mapaURL = '';
 
     if (props.localizacao && props.localizacao.lat && props.localizacao.lng) {
-        mapaURL = `https://maps.googleapis.com/maps/api/staticmap?center=${props.localizacao.lat},${props.localizacao.lng}&zoom=14&size=400x200&maptype=roadmap&markers=color:red%7Clabel:%7C${props.localizacao.lat},${props.localizacao.lng}&key=${ENV.apiKey}`;
+        mapaURL = `https://maps.googleapis.com/maps/api/staticmap?center=${props.localizacao.lat},${props.localizacao.lng}&zoom=14&size=400x200&maptype=roadmap&markers=color:red%7Clabel:%7C${props.localizacao.lat},${props.localizacao.lng}&key=${ENV.GoogleMaps.apiKey}`;
     }
 
     return (
