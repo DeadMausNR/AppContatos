@@ -43,7 +43,7 @@ const InputContato = (props) => {
 
             <Button
                 title="Salvar Contato"
-                onPress={() => props.onSalvarContato(new Contato((contatoKey ? contatoKey : new Date().toString()), contatoNome, contatoTelefone, contatoImagem))}
+                onPress={() => props.onSalvarContato(new Contato(contatoKey, contatoNome, contatoTelefone, contatoImagem))}
             />
         </View>
     );

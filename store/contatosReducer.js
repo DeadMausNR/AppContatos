@@ -1,4 +1,5 @@
-import { ADD_CONTATO, UPDATE_CONTATO, DELETE_CONTATO } from './contatosActions';
+import { ADD_CONTATO, UPDATE_CONTATO, DELETE_CONTATO, LISTA_CONTATOS } from './contatosActions';
+import Contato from '../model/Contato';
 
 const estadoInicial = {
     listaContatos: []
@@ -6,6 +7,10 @@ const estadoInicial = {
 
 export default (estado = estadoInicial, action) => {
     switch (action.type) {
+        case LISTA_CONTATOS:
+            return {
+                listaContatos: action.contatos.map(c => new Contato(c.key, c.nome, c.telefone, c.imagem))
+            }
         case ADD_CONTATO:
             return {
                 listaContatos: estado.listaContatos.concat(action.contato)

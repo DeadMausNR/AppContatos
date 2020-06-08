@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { StyleSheet, Text, View, FlatList, Alert, Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -25,6 +25,10 @@ export default function Contato({ navigation }) {
     const dispatch = useDispatch();
     const listaContatos = useSelector(estado => estado.contatosReducer.listaContatos);
 
+    useEffect(() => {
+        dispatch(contatosActions.listarContatos())
+    }, [dispatch]);
+
     const deletarContato = (key) => {
         Alert.alert(
             'Deletar Contato',
@@ -50,7 +54,7 @@ export default function Contato({ navigation }) {
                 <FlatList
                     style={styles.FlatListStyle}
                     data={listaContatos}
-                    keyExtractor={contato => contato.key}
+                    keyExtractor={contato => contato.key.toString()}
                     renderItem={
                         contato => (
                             <ContatoItem contato={contato} onDelete={deletarContato} onAbrirAtualizar={() => navigation.navigate('EditarContato', { contato })} />
